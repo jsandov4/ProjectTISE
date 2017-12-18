@@ -44,3 +44,5 @@ def test_normalize():
 	yn = Methods.normalize(y)
 	val = Methods.integrate(x,yn,dx)
 	assert (abs(val - 1 <= 0.01)) , "Bad normalization"
+
+def test

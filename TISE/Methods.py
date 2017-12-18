@@ -10,34 +10,10 @@ def D2_LegPolyn(itype,N):
     # 2 additional points to avoid lost of them in deriv
     x = np.linspace(x0,xf,N)
     xaux = np.linspace(x0-2*dx,xf+2*dx,N+4)
-    yaux = LegPolyn(itype,xaux)
+    yaux = recursiveLP(itype,xaux)
     x2,dy = secondDer(xaux,yaux,dx)
     return x,dy
-def LegPolyn(itype,x):
-    nsize = len(x)
-    if(itype == 0):
-        y = np.array([1.0 for i in range(nsize)],float)
-    if(itype == 1):
-        y = x
-    if(itype == 2):
-        y = 0.5*(3*(x**2)-1.0)
-    if(itype == 3):
-        y = 0.5*(5.0*(x**3)-3.0*x)
-    if(itype == 4):
-        y = (35.0*(x**4)-30.0*(x**2)+3.0)/8.0
-    if(itype == 5):
-        y = (63.0*(x**5)-70.0*(x**3)+15.0*x)/8.0
-    if(itype == 6):
-        y = (231.0*(x**6)-315.0*(x**4)+105.0*(x**2)-5.0 )/16.0
-    if(itype == 7):
-        y = (429.0*(x**7)-693.0*(x**5)+315.0*(x**3)-35.0*x)/16.0
-    if(itype == 8):
-        y = (6435.0*(x**8)-12012.0*(x**6)+6930.0*(x**4)-1260.0*(x**2)+35.0)/128.0
-    if(itype == 9):
-        y = (12155.0*(x**9)-25740.0*(x**7)+18018.0*(x**5)-4620.0*(x**3)+315.0*x)/128.0
-    if(itype == 10):
-        y = (46189.0*(x**10)-109395.0*(x**8)+90090.0*(x**6)-30030.0*(x**4)+3465.0*(x**2)-63.0)/256
-    return y
+
         
 def derivative(x,y,dx):
     nsize = len(y)
@@ -97,26 +73,46 @@ def buildMatrix(N,nbase):
             #matrix[j][i] = matrix[i][j]
     return matrix
 
+def recursiveLP(n,x):
+    size = len(x)
+    y = np.zeros((size))
+    for ix in range(size):
+        for k in range(n+1):
+            tt = ((x[ix]-1.0)/2.0)**k
+            y[ix] = y[ix]+combina(n,k)*combina(n+k,k)*tt
+            
+    return y
+
+def fourierBasis(n,x):
+    size = len(x)
+    length = 2.0 # domain from -1 to 1
+    y = np.zeros((size))
+    for ix in range(size):
+        tt = math.pi*n/length 
+        y[ix] = cos(x[ix]*tt)+sin(x[ix]*tt)
+    return y
+
+def combina(n,p):
+    num = math.factorial(n)
+    den = math.factorial(p)*math.factorial(n-p)
+    return num/den
 
 
 def main(): # pragma: no cover
-    x0 = -1.0
+    x0 =-1.0
     xf = 1.0
-    N = 10000
+    N = 100
     nbases = 4
-    print(pi)
-    #print(m)
     nt = 1000
-    dx = 2*pi/nt
-    x = np.linspace(0,2*pi,nt)
-    y = sin(x)
-    xx,dy = derivative(x,y,dx)
-    x1 = xx[10]
-    y1 = dy[10]
-    print(x1,y1,cos(x1))
-    print(abs(y1 - cos(x1)) <= 0.01)
-    plt.plot(xx,dy)
-    plt.plot(x,cos(x))
+    dx = 2.0/nt
+    x = np.linspace(-1,1,nt)
+    for i in range(5):
+        y = fourierBasis(i,x)
+        plt.plot(x,y)
+    #  yaux = recursiveLP(4,x)
+    #  x2,dy = secondDer(x,yaux,dx)
+    #plt.plot(x2,dy)
+    #plt.plot(x,yaux)
     plt.show()
 
 
