@@ -99,39 +99,26 @@ def buildMatrix(N,nbase):
 
 
 
-if __name__ == __main__:
-
+def main(): # pragma: no cover
     x0 = -1.0
     xf = 1.0
-
-    N = 1000
+    N = 10000
     nbases = 4
+    print(pi)
+    #print(m)
+    nt = 1000
+    dx = 2*pi/nt
+    x = np.linspace(0,2*pi,nt)
+    y = sin(x)
+    xx,dy = derivative(x,y,dx)
+    x1 = xx[10]
+    y1 = dy[10]
+    print(x1,y1,cos(x1))
+    print(abs(y1 - cos(x1)) <= 0.01)
+    plt.plot(xx,dy)
+    plt.plot(x,cos(x))
+    plt.show()
 
 
-    dx = (xf-x0)/(N-1)
-    x = np.linspace(x0,xf,N)
-
-    i = 4
-    j  = 6
-    f1 = LegPolyn(i,x)
-    f2 = LegPolyn(j,x)
-    f12 = f1*f2
-    print(i,j,integrate(x,f12,dx))
-
-    m =  buildMatrix(N,nbases)
-
-    print(m)
-
-    plt.plot(x,f1)
-    plt.plot(x,f2)
-    #plt.show()
-
-
-    A = np.mat("3 2; 2 0")
-
-    #print "A : \n",A
-    w,v = np.linalg.eig(m)
-
-    #print w[0]
-    #print v
-    #print w
+if __name__ == '__main__':
+    main()
