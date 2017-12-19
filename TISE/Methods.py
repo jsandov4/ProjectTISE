@@ -105,16 +105,17 @@ def buildMatrix(N,nbase,itype):
 
 
 
-
-
-
 def main(): # pragma: no cover
+    import os
 
     N = 1000 # number of points,x 
     nbase = 10 # size of basis set
     itipo = 0 # 0 : LegPoly, 1: Fourier
 
-    
+    args = inputconsole().parse_args()
+    nbase = args.nbas
+    itipo = args.types
+
     dx = 2.0/N
     x = np.linspace(-1,1,N)  
     m = buildMatrix(N,nbase,itipo)
@@ -144,13 +145,11 @@ def main(): # pragma: no cover
         minval = oldVal[imin].real
 
 # construct the superposition
-    print(newEvect)
     for k in range(nbase):
         y = np.zeros(N)
         yaux = np.zeros(N)
         for j in range(nbase):
             cki = newEvect[j,k]
-            print(cki)
             yaux = cki*normalize(recursiveLP(j,x),dx)
             y = y + yaux
         
@@ -161,5 +160,3 @@ def main(): # pragma: no cover
     plt.legend()   
     plt.show()
     
-if __name__ == '__main__':
-    main()
