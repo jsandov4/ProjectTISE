@@ -74,7 +74,7 @@ def Hij(i,j,N,itype):
         x = np.linspace(x0,xf,N)
         yi = normalize(recursiveLP(i,x),dx)
         xl = np.linspace(x0-2*dx,xf+2*dx,N+4)
-        yj = recursiveLP(j,xl)
+        yj = normalize(recursiveLP(j,xl),dx)
        
     else:
         x0 = 0.0
@@ -83,42 +83,59 @@ def Hij(i,j,N,itype):
         x = np.linspace(x0,xf,N)
         yi = normalize(fourierBasis(i,x),dx)
         xl = np.linspace(x0-2*dx,xf+2*dx,N+4)
-        yj = fourierBasis(j,xl)
+        yj = normalize(fourierBasis(j,xl),dx)
        
 
     x2,ddyj = derivative2(xl,yj,dx)
-    ddyjn = normalize(ddyj,dx)
-    integ = -integrate(yi*ddyjn,dx)
+    #ddyjn = normalize(ddyj,dx)
+    integ = -integrate(yi*ddyj,dx)
 
     return integ
 
 
-def buildMatrix(N,nbase,itype):
+def buildMatrix(N,nbase,itype,v0):
 
     matrix = np.zeros((nbase,nbase))
 
     for i in range(nbase):
         for j in range(nbase):
-            matrix[i][j] = Hij(i,j,N,itype)
-
+            if(i == j):
+                v0val = v0
+            else:
+                v0val = 0.0        
+            matrix[i][j] = Hij(i,j,N,itype) + v0val
+            
     return matrix
 
 
 
 def main(): # pragma: no cover
     import os
+    import sys
 
-    N = 1000 # number of points,x 
-    nbase = 10 # size of basis set
-    itipo = 0 # 0 : LegPoly, 1: Fourier
+    filename = sys.argv[1]
+    # Reading the input
+    f = open(filename,'r')
+    allLines = f.readlines()
+    itipo = int(allLines[1])
+    nbase = int(allLines[3])
+    N = int(allLines[5])
+    v0 = float(allLines[7])
 
-    args = inputconsole().parse_args()
-    nbase = args.nbas
-    itipo = args.types
 
-    dx = 2.0/N
-    x = np.linspace(-1,1,N)  
-    m = buildMatrix(N,nbase,itipo)
+    #N = 1000 # number of points,x 
+    #nbase = 10 # size of basis set
+    #itipo = 0 # 0 : LegPoly, 1: Fourier
+    #v0 = 0.0 # input potential constant
+
+    if (itipo == 0):
+        dx = 2.0/(N-1.0)
+        x = np.linspace(-1,1,N) 
+    else:
+        dx = 2.0*pi/N
+        x = np.linspace(0,2.0*pi,N) 
+
+    m = buildMatrix(N,nbase,itipo,v0)
     oldVal, oldEvect = np.linalg.eig(m)
     newVal = np.zeros(nbase)
     newEvect = np.zeros((nbase,nbase))
@@ -160,3 +177,5 @@ def main(): # pragma: no cover
     plt.legend()   
     plt.show()
     
+if __name__ == "__main__":
+    main()
