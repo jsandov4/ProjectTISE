@@ -5,7 +5,7 @@ Program
 This package allows to solve approximately the Time Independent Schrodinger Equation. From the variational principle it is possible to arrive to a set of algebraic linear equations, which solutions provides the best wave function given the size of the chosen basis.
 
 ## Getting started
-<img src = 'img/image.png' />
+<img src = 'TISE/image.png' />
 
 ### Prerequisites
 For using this package you would need to install python 3. You can download it from https://www.python.org/downloads/
