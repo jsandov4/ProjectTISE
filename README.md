@@ -1,6 +1,5 @@
 ![Coverage image](./img/coverage.svg)
 Program
-
 # Solving TISE 
 
 
@@ -49,6 +48,7 @@ $ pip3.6 install pytest
 - Then to check the test, please type
 ```sh
 $ python3 -m pytest test/test.py
+$ python3 -m pytest test/test.py --cov
 ```
 
 ## Test cases
