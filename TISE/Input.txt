@@ -1,7 +1,7 @@
 # Type of basis: LP(0) or Fourier (1)
 1
 # Size of basis
-10
+5
 # Number of grid points
 1000
 # Potential (constant)
