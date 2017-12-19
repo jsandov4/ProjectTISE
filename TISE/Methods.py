@@ -111,16 +111,55 @@ def buildMatrix(N,nbase,itype):
 def main(): # pragma: no cover
 
     N = 1000 # number of points,x 
-    nbase = 3 # size of basis set
+    nbase = 10 # size of basis set
     itipo = 0 # 0 : LegPoly, 1: Fourier
 
-
+    
     dx = 2.0/N
     x = np.linspace(-1,1,N)  
     m = buildMatrix(N,nbase,itipo)
-    print(m)
-    #plt.show()
+    oldVal, oldEvect = np.linalg.eig(m)
+    newVal = np.zeros(nbase)
+    newEvect = np.zeros((nbase,nbase))
+
+# draw stuff
+    fig = plt.figure()
+    ax1 = fig.add_subplot(211)
+    ax2 = fig.add_subplot(212)
 
 
+
+# Organize the eigenvect and eigenval
+# according to energy
+    minval = 10000
+    for k in range(nbase):
+        for i in range(nbase):
+            if(oldVal[i].real < minval):
+                minval = oldVal[i].real
+                imin = i
+        newVal[k] = oldVal[imin].real
+        oldVal[imin] = abs(1000*10)
+        for j in range(nbase):
+            newEvect[j,k] = oldEvect[j,imin].real
+        minval = oldVal[imin].real
+
+# construct the superposition
+    print(newEvect)
+    for k in range(nbase):
+        y = np.zeros(N)
+        yaux = np.zeros(N)
+        for j in range(nbase):
+            cki = newEvect[j,k]
+            print(cki)
+            yaux = cki*normalize(recursiveLP(j,x),dx)
+            y = y + yaux
+        
+        ax1.plot(x,y, label="|"+str(k)+">")
+        ax2.plot([1,2],[newVal[k],newVal[k]], label="E"+str(k) )
+    ax1.legend()
+    ax2.legend()
+    plt.legend()   
+    plt.show()
+    
 if __name__ == '__main__':
     main()
