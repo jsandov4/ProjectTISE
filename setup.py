@@ -20,7 +20,7 @@ setup(name='ProjTISE',
       packages=['TISE'],
       install_requires=install_requires,
       entry_points = {
-	'console_scripts' : ['TISE = TISE.__init__:main'],
+	'console_scripts' : ['TISE = TISE.Methods:main'],
       }
      )
 

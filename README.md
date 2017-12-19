@@ -2,11 +2,10 @@
 Program
 # Solving TISE 
 
-
 This package allows to solve approximately the Time Independent Schrodinger Equation. From the variational principle it is possible to arrive to a set of algebraic linear equations, which solutions provides the best wave function given the size of the chosen basis.
 
 ## Getting started
-
+<img src = 'image.png' />
 
 ### Prerequisites
 For using this package you would need to install python 3. You can download it from https://www.python.org/downloads/
@@ -22,21 +21,32 @@ $ pip3.6 install --user .
 
 ### Input data from console
 
-The input that should be put in the console has the following parameters:
+The input file that should has the following parameters:
 
-###### (-ty) : Type of basis function used 
+######  Type of basis function used 
 You can chose between Legendre Polynomials (LP) or Fourier series (FS). Type on the terminal 0 (zero) for LP otherwise you will use FS.
-###### (-nb) : Size of the basis
-###### (-v) : Potential operator (constant value)
+######  Size of the basis
+######  Potential operator (constant value)
 
 
-##### Example of a console input
-Once installed, you can use following command to solve TISE (approx) 
+##### Example of input
+Once installed, you create a input file as follows 
 ```sh
-TISE -ty 1 -nb 5 -v 0 
+ Type of basis: LP(0) or Fourier (1)
+1
+ Size of basis
+5
+ Number of grid points
+1000
+ Potential (constant)
+0
 ```
-In this particular case the TISE is going to be solve by employing a Fourier series as basis set with a size of 5.  
+In this particular case the TISE is going to be solve by employing a Fourier series as basis set with a size of 5, using 1000 grid point and the potential (V) is 0. 
 
+After this you can execute the program as follows
+```sh
+TISE yourPath/Input.txt
+```
 
 # Running the tests
 In order to perform the test cases done for building this package you have to:
